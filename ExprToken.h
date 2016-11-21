@@ -35,6 +35,7 @@ public:
         assign_t,
         parenthesis_t,
         function_t,
+        argseparator_t,
     };
 
     /* Constructeur vide */
@@ -52,10 +53,14 @@ public:
     float value() const;
     /* Accesseur du type */
     float type() const;
+
+    /* Setter du type */
+    void forceType(TokenType t);
+
     /* Accesseur de la chaîne */
     string str() const;
 
-private:
+protected:
     /* Chaîne en entrée sauvegardée */
     string _s;
     /* Ordre de priorité ou valeur */
@@ -67,6 +72,8 @@ private:
     bool is_litteral(const string s);
     /* is_operator : Détermine si c'est un opérateur */
     bool is_operator(const string s);
+    /* is_operator : Détermine si c'est un opérateur */
+    bool is_comma(const string s);
     /* is_operator : Détermine si c'est un opérateur */
     bool is_symbol(const string s);
 

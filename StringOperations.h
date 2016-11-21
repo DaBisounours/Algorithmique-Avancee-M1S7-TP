@@ -21,6 +21,7 @@ public:
     /* Partitionne une chaîne avec un délimiteur
      * TODO : à modifier / faire une autre méthode pour la partie 3 */
     static vector<ExprToken> split_expr_simple(string &s, const char delimiter = ' ');
+    static vector<ExprToken> split_expr_medium(string &s);
     static vector<ExprToken> split_expr_complex(string &s);
     static vector<string> split_program(string &s, const char delimiter = ';');
 

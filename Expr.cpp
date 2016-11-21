@@ -101,7 +101,7 @@ Expr::Expr(const char *str) throw(InvalidExpression) {
     string input{str};
     try {
         // Conversion en notation polonaise inversée (Reverse Polish Notation)
-        _exprTokens = convertToRPN(StringOperations::split_expr_complex(input));
+        _exprTokens = convertToRPN(StringOperations::split_expr_medium(input));
     } catch (NotAToken) {
         cerr << ". Make sure you have spaces between operands and operators -> ";
         throw InvalidExpression();

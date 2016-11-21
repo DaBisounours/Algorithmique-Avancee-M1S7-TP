@@ -39,7 +39,7 @@ public:
     Expr(const char *str) throw(InvalidExpression);
 
     /* eval : Retourne la valeur de l'expression */
-    float eval(map<string, Expr>& symbols);
+    virtual float eval(map<string, Expr>& symbols);
 
     /* Affiche la représentation interne */
     void print();

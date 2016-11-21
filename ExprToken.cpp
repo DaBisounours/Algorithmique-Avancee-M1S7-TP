@@ -16,11 +16,13 @@ ExprToken::ExprToken(string str) throw(NotAToken) {
     // if not a littéral and not operator
     _s = str;
     if (not is_parenthesis(_s)){
-        if(not is_litteral(_s)){
-            if(not is_operator(_s)){
-                if (not is_symbol(_s)){
-                    if(not is_equal_sign(_s)) {
-                        throw NotAToken();
+        if (not is_comma(_s)) {
+            if (not is_litteral(_s)) {
+                if (not is_operator(_s)) {
+                    if (not is_symbol(_s)) {
+                        if (not is_equal_sign(_s)) {
+                            throw NotAToken();
+                        }
                     }
                 }
             }
@@ -115,7 +117,18 @@ float ExprToken::type() const {
     return _type;
 }
 
+void ExprToken::forceType(ExprToken::TokenType t) {
+    _type = t;
+}
 
+bool ExprToken::is_comma(const string s) {
+    if (s == ",") {
+        _value = 0;
+        _type = argseparator_t;
+        return true;
+    }
+    return false;
+}
 
 
 /* Surcharge d'opérateurs de comparaison d'ExprToken */
