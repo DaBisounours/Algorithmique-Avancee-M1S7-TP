@@ -30,7 +30,7 @@ vector<ExprToken> Expr::convertToRPN(const vector<ExprToken> infix_expr) {
             || token.type() == ExprToken::symbol_t
             || token.type() == ExprToken::assign_t) {
             // Si c'est le cas on le pousse à la sortie
-            output_expr.push_back(token);
+            output_expr.push_back(ExprToken(token));
         // Si c'est une parenthèse
         } else if (token.type() == ExprToken::parenthesis_t) {
             if (!token.value()) {// left parenthesis
@@ -84,12 +84,13 @@ vector<ExprToken> Expr::convertToRPN(const vector<ExprToken> infix_expr) {
             // Si la pile d'opérateurs n'est pas vide
             if (not operator_stack.empty()) operator_back = operator_stack.back();
             if (operator_back.type() == ExprToken::operator_t) {
-                while (not operator_stack.empty() && token < operator_back) {
+                while (not operator_stack.empty() && (token < operator_back || token == operator_back)) {
                     // On dépile tant que l'operateur en tête de pile est
                     // inférieur à celui en entrée
                     operator_stack.pop_back();
-                    output_expr.push_back(operator_back);
-                    operator_back = operator_stack.back();
+                    output_expr.push_back(ExprToken(operator_back));
+                    if(not operator_stack.empty())
+                        operator_back = operator_stack.back();
                 }
             }
             // On empile le nouvel opérateur
@@ -137,7 +138,7 @@ float Expr::eval(map<string, Expr> &symbols) {
         // Si c'est un littéral
         if (token.type() == ExprToken::operand_t)
             // On le push dans la pile des opérandes
-            operand_stack.push_back(token);
+            operand_stack.push_back(ExprToken(token));
             // Si c'est un symbole
         else if (token.type() == ExprToken::symbol_t) {
             // Si c'est le premier élément alors c'est une assignation

@@ -7,7 +7,19 @@
 using namespace std;
 
 
+void test(string title, const string& testLine, float expected, Program p){
+    string separator = "\n==================================================================\n";
+    bool ok = false;
 
+    // Début des tests
+    float result = (Expr(testLine.c_str())).eval(p.context());
+    cout << separator << title << ": \"" << testLine << "\""  << endl;
+    cout << "\tExpected: " << expected << endl;
+    cout << "\tResult: " << result << endl;
+    ok = result == expected;
+    cout << "\t" << ( ok ? "OK" : "KO") << endl;
+
+}
 
 
 int main() {
@@ -37,15 +49,9 @@ int main() {
         cout<< res << "\n";
 */
     Program p;
-    string separator = "==================================================================";
-    string testline;
+    test("Addition", "1+2+3.4+5", 11.4, p);
+    test("Soustraction", "11.5-5-3.4-2", 1, p);
 
-    // Début des tests
-    cout << separator << "Addition:" << endl;
-    
-    cin >> p;
-
-    p.print();
 
     return 0;
 }
