@@ -3,6 +3,7 @@
 //
 
 #include <sstream>
+#include <algorithm>
 #include "StringOperations.h"
 #include "Func.h"
 
@@ -30,7 +31,7 @@ vector<string> StringOperations::split_program(string &s, const char delimiter) 
 
 string StringOperations::joinExprToString(vector<ExprToken> vector) {
     stringstream ss;
-    for(ExprToken & token : vector){
+    for (ExprToken &token : vector) {
         ss << token.str() << " ";
     }
     return ss.str();
@@ -40,7 +41,7 @@ vector<ExprToken> StringOperations::split_expr_medium(string &s) {
 
     stringstream parser(s);
     vector<ExprToken> output;
-    while(not parser.eof()) {
+    while (not parser.eof()) {
 
         float value;
         char sign;
@@ -50,8 +51,7 @@ vector<ExprToken> StringOperations::split_expr_medium(string &s) {
             parser >> value;
             printf("\nNUM:%f", value);
             output.push_back(ExprToken{value});
-        }
-        else {
+        } else {
             if (parser.eof()) break;
             parser >> sign;
             string str;
@@ -67,16 +67,14 @@ vector<ExprToken> StringOperations::split_expr_medium(string &s) {
                     continue;
                 }
 
-            } catch (NotAToken){
+            } catch (NotAToken) {
             }
         }
 
     }
-
     return output;
-
-
 }
+
 
 vector<ExprToken> StringOperations::split_expr_complex(string &s) {
 
@@ -85,6 +83,7 @@ vector<ExprToken> StringOperations::split_expr_complex(string &s) {
     regex fun("([_[:alpha:]]|[[:lower:]])[[:alpha:]]*\\(.*\\)");
     regex oper("(\\+|-|\\*|/)");
     regex parenthesis("(\\(|\\))");
+    regex comma(",");
 
 
     vector<ExprToken> tokens;
@@ -92,9 +91,23 @@ vector<ExprToken> StringOperations::split_expr_complex(string &s) {
     string input = s;
     int cursor = 0;
 
+    input = s;
+
+    while (input.length() != cursor) {
+        if (input.at(cursor) == ' ')
+            input.erase(cursor, 1);
+        else
+            cursor++;
+    }
+
+
+    cursor = 0;
     // Parse char by char
-    while(input.length()) {
-        // Init Cursor at pos 1
+    while (input.length()) {
+
+
+
+        // Init Cursor at end pos
         cursor = (int) input.length();
 
         // Vars to check if any is recognized (First value is true to go in the while loop)
@@ -103,11 +116,13 @@ vector<ExprToken> StringOperations::split_expr_complex(string &s) {
         bool recognized_fun = false;
         bool recognized_oper = false;
         bool recognized_par = false;
+        bool recognized_comma = false;
 
         string current;
         // While nothing is recognized
         while (cursor != 0
-               && !recognized_float && ! recognized_fun && !recognized_oper && !recognized_var && !recognized_par) {
+               && !recognized_float && !recognized_fun && !recognized_oper && !recognized_var && !recognized_par &&
+               !recognized_comma) {
 
             // Subset becomes bigger
             current = input.substr(0, (unsigned long) cursor);
@@ -117,55 +132,52 @@ vector<ExprToken> StringOperations::split_expr_complex(string &s) {
             recognized_oper = regex_match(current, oper);
             recognized_var = regex_match(current, var);
             recognized_par = regex_match(current, parenthesis);
+            recognized_comma = regex_match(current, comma);
 
             cursor--;
         }
 
-        if (cursor == -1) throw "Invalid Expression";
+        if (cursor == -1) throw InvalidExpression();
         // Add last recognized token
 
-        if (recognized_float){
-            cout << "FLOAT:" << current << endl;
+        if (recognized_float) {
+            //cout << "FLOAT:" << current << endl;
             tokens.push_back(ExprToken(current));
         } else if (recognized_var) {
-            cout << "VAR:" << current << endl;
+            //cout << "VAR:" << current << endl;
             tokens.push_back(ExprToken(current));
-        } else if (recognized_oper){
-            cout << "OPER:" << current << endl;
+        } else if (recognized_oper) {
+            //cout << "OPER:" << current << endl;
             tokens.push_back(ExprToken(current));
-        } else if (recognized_fun){
+        } else if (recognized_comma) {
+            //cout << "COMMA:" << current << endl;
+            tokens.push_back(ExprToken(current));
+        } else if (recognized_fun) {
 
             string fun = string(current);
             unsigned long fun_cursor = fun.length();
-            while (!regex_match(fun.substr(0,fun_cursor), var)) fun_cursor--;
+            while (!regex_match(fun.substr(0, fun_cursor), var)) fun_cursor--;
             // Add function name
-            string fun_name = fun.substr(0,fun_cursor);
-            cout << "FUN:" << fun_name << endl;
+            string fun_name = fun.substr(0, fun_cursor);
+            //cout << "FUN:" << fun_name << endl;
             tokens.push_back(ExprToken(fun_name));
             tokens.back().forceType(ExprToken::function_t);
-            cout << "PAR:" << "(" << endl;
+            //cout << "PAR:" << "(" << endl;
             tokens.push_back(ExprToken("("));
-            string args = fun.substr(fun_cursor+1,fun.length()-(fun_cursor+2));
+            string args = fun.substr(fun_cursor + 1, fun.length() - (fun_cursor + 2));
 
-            vector<ExprToken> split_vector;
-            stringstream ss;
-            ss << args;
-            for (string arg; getline(ss, arg, ',');) {
-                for (ExprToken &token : split_expr_complex(arg))
-                    tokens.push_back(token);
-                cout << "COMMA:" << "," << endl;
-                tokens.push_back(ExprToken(","));
-            }
-            cout << "PAR:" << ")" << endl;
-            tokens.push_back(ExprToken("("));
+            for (ExprToken &token : split_expr_complex(args))
+                tokens.push_back(token);
+            //cout << "PAR:" << ")" << endl;
+            tokens.push_back(ExprToken(")"));
         } else if (recognized_par) {
-            cout << "PAR:" << current << endl;
+            //cout << "PAR:" << current << endl;
             tokens.push_back(ExprToken(current));
         } else {
-            throw "Invalid Expression";
+            throw InvalidExpression();
         }
-        // TODO Subset the input
-        input = input.substr(cursor+1,input.length()-1);
+        // Subset the input
+        input = input.substr(cursor + 1, input.length() - 1);
     }
 
     return tokens;

@@ -36,14 +36,16 @@ int main() {
         //cout << "Résultat : \n";
         cout<< res << "\n";
 */
-    /*Program p;
+    Program p;
+    string separator = "==================================================================";
+    string testline;
 
+    // Début des tests
+    cout << separator << "Addition:" << endl;
+    
     cin >> p;
 
-    p.print();*/
-
-    string input = "1.2+2*(4+24.5-2)/sin(0)-5";
-    StringOperations::split_expr_complex(input);
+    p.print();
 
     return 0;
 }

@@ -74,3 +74,7 @@ void Program::_setProgramCStr(const char *prg_str) {
     // Séparation des différents programmes par ';'
     _expressions_str = StringOperations::split_program(program_string);
 }
+
+map<string, Expr> &Program::context() {
+    return _symbols;
+}

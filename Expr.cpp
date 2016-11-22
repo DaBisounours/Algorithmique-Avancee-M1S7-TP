@@ -6,6 +6,7 @@
 #include <cassert>
 #include "Expr.h"
 #include "StringOperations.h"
+#include "Func.h"
 
 template<typename T>
 void pop_front(std::vector<T> &vec) {
@@ -61,7 +62,23 @@ vector<ExprToken> Expr::convertToRPN(const vector<ExprToken> infix_expr) {
                     throw MismatchedParenthesis();
                 }
             }
+        // Si c'est une virgule
+        } else if (token.type() == ExprToken::argseparator_t) {
+            // Tant que le token en tete de liste n'est pas une parenthèse gauche
+            while (!operator_stack.empty()
+                && operator_stack.back().type() != ExprToken::parenthesis_t
+                && !operator_stack.back().value()) {
+                // Déplacer les opérateurs de la pile dans la sortie
+                // On la déplace dans la sortie
+                ExprToken operator_back = operator_stack.back();
+                operator_stack.pop_back();
+                output_expr.push_back(operator_back);
+            }
+            // Si on ne trouve pas de parenthèse, Il y a une erreur de parenthèse ou de placement de séparateur
+            if(operator_stack.empty()) throw MismatchedParenthesis();
         // Si c'est un opérateur
+        } else if(token.type() == ExprToken::function_t) {
+            operator_stack.push_back(token);
         } else {
             ExprToken operator_back;
             // Si la pile d'opérateurs n'est pas vide
@@ -79,9 +96,9 @@ vector<ExprToken> Expr::convertToRPN(const vector<ExprToken> infix_expr) {
             operator_stack.push_back(token);
 
         }
-        cout << '\n';
+        /*cout << '\n';
         for (ExprToken &e:output_expr)cout << e.str() << " ";
-        cout << '\n';
+        cout << '\n';*/
 
     }
 
@@ -101,7 +118,7 @@ Expr::Expr(const char *str) throw(InvalidExpression) {
     string input{str};
     try {
         // Conversion en notation polonaise inversée (Reverse Polish Notation)
-        _exprTokens = convertToRPN(StringOperations::split_expr_medium(input));
+        _exprTokens = convertToRPN(StringOperations::split_expr_complex(input));
     } catch (NotAToken) {
         cerr << ". Make sure you have spaces between operands and operators -> ";
         throw InvalidExpression();
@@ -157,28 +174,48 @@ float Expr::eval(map<string, Expr> &symbols) {
                 // L'expression est invalide
                 throw InvalidExpression();
         } else {
+            // TODO Manage FUNCTIONS
             // On récupère les deux dernières opérandes
-            float operand_right = operand_stack.back().value();
-            operand_stack.pop_back();
-            float operand_left = operand_stack.back().value();
-            operand_stack.pop_back();
+            vector<ExprToken> args;
+            float argc;
+            if (token.type() == ExprToken::function_t) {
+                // Get the function
+                Func func = Func(token.str());
+                if(func.hasArgCount()) {
+                    argc = func.argCount();
+                } else {
+                    argc = operand_stack.back().value();
+                    operand_stack.pop_back();
+                }
+                for (int i=0; i<argc; ++i) {
+                    func.addArg(ExprToken(operand_stack.back()));
+                    operand_stack.pop_back();
+                }
+                operand_stack.push_back(ExprToken(func.eval(symbols)));
+            } else {
 
-            // On push le résultat des deux opérandes récupérées, calculé via l'opérateur en entrée
-            switch (token.str()[0]) {
-                case '+' :
-                    operand_stack.push_back(ExprToken{operand_left + operand_right});
-                    break;
-                case '-' :
-                    operand_stack.push_back(ExprToken{operand_left - operand_right});
-                    break;
-                case '*' :
-                    operand_stack.push_back(ExprToken{operand_left * operand_right});
-                    break;
-                case '/' :
-                    operand_stack.push_back(ExprToken{operand_left / operand_right});
-                    break;
-                default:
-                    throw NotAToken();
+                float operand_right = operand_stack.back().value();
+                operand_stack.pop_back();
+                float operand_left = operand_stack.back().value();
+                operand_stack.pop_back();
+
+                // On push le résultat des deux opérandes récupérées, calculé via l'opérateur en entrée
+                switch (token.str()[0]) {
+                    case '+' :
+                        operand_stack.push_back(ExprToken{operand_left + operand_right});
+                        break;
+                    case '-' :
+                        operand_stack.push_back(ExprToken{operand_left - operand_right});
+                        break;
+                    case '*' :
+                        operand_stack.push_back(ExprToken{operand_left * operand_right});
+                        break;
+                    case '/' :
+                        operand_stack.push_back(ExprToken{operand_left / operand_right});
+                        break;
+                    default:
+                        throw NotAToken();
+                }
             }
         }
         first = false;

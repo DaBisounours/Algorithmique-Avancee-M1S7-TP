@@ -27,6 +27,8 @@ public:
     /* Redéfinition de l'opérateur d'entrée >> */
     friend istream &operator>>( istream  &input, Program &D );
 
+    map<string, Expr> &context();
+
 private:
     /* Séquence des expressions sous forme de chaîne de caractères */
     vector<string> _expressions_str;
