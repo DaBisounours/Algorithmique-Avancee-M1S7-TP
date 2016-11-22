@@ -8,7 +8,7 @@ bool Func::is_assignment(vector<ExprToken> vector) {
     return false;
 }
 
-float Func::eval(map<string, Expr> &symbols) {
+double Func::eval(map<string, Expr> &symbols) {
     if(_name == "sin")
         return sin(_args.back().value());
     else if(_name == "tan")
@@ -21,14 +21,26 @@ float Func::eval(map<string, Expr> &symbols) {
         return log(_args.back().value());
     else if(_name == "exp")
         return exp(_args.back().value());
+    else if(_name == "hypot")
+        return sqrt(((long)_args.back().value())^2 + ((long)_args.front().value())^2);
     else if(_name == "min")
         return min(_args.back().value(), _args.front().value());
     else if(_name == "max")
         return max(_args.back().value(), _args.front().value());
     else if(_name == "pow")
-        return pow(_args.front().value(), _args.back().value());
+        return pow(_args.back().value(), _args.front().value());
     else if(_name == "lerp")
-        return lerp(_args.front().value(), _args.at(1).value(), _args.back().value());
+        return lerp(_args.back().value(), _args.at(1).value(), _args.front().value());
+    else if(_name == "polynome"){
+        double sum = 0;
+        double x = _args.front().value();
+        for (int i = 1; i < _args.size()-1; ++i) {
+            unsigned long degree = _args.size()-i-1;
+            double coeff = _args[degree].value();
+            sum += coeff * pow(x,i-1);
+        }
+        return sum;
+    }
     else {
         return 0;
     }
@@ -39,7 +51,7 @@ void Func::addArg(const ExprToken &arg) {
     _args.push_back(ExprToken(arg));
 }
 
-Func::Func(const string name, float argc) {
+Func::Func(const string name, double argc) {
     _name = name;
     _argc = argc;
     if(name == "sin"
@@ -68,10 +80,10 @@ bool Func::hasArgCount() {
 }
 
 
-const float Func::argCount() {
+const double Func::argCount() {
     return _argc;
 }
 
-float Func::lerp(float t, float a, float b) {
+double Func::lerp(double t, double a, double b) {
         return (1-t)*a + t*b;
 }

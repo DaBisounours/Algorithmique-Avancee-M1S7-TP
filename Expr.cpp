@@ -82,17 +82,24 @@ vector<ExprToken> Expr::convertToRPN(const vector<ExprToken> infix_expr) {
         } else {
             ExprToken operator_back;
             // Si la pile d'opérateurs n'est pas vide
-            if (not operator_stack.empty()) operator_back = operator_stack.back();
-            if (operator_back.type() == ExprToken::operator_t) {
-                while (not operator_stack.empty() && (token < operator_back || token == operator_back)) {
+            if (not operator_stack.empty())
+            {
+                operator_back = operator_stack.back();
+                bool same_type_operators = operator_back.type() == ExprToken::operator_t
+                && token.type() == ExprToken::operator_t;
+                while (same_type_operators && not operator_stack.empty() && (token < operator_back || token == operator_back)) {
                     // On dépile tant que l'operateur en tête de pile est
                     // inférieur à celui en entrée
                     operator_stack.pop_back();
                     output_expr.push_back(ExprToken(operator_back));
                     if(not operator_stack.empty())
                         operator_back = operator_stack.back();
+                    same_type_operators = operator_back.type() == ExprToken::operator_t
+                                          && token.type() == ExprToken::operator_t;
                 }
+
             }
+
             // On empile le nouvel opérateur
             operator_stack.push_back(token);
 
@@ -127,7 +134,7 @@ Expr::Expr(const char *str) throw(InvalidExpression) {
 }
 
 /* eval : Retourne la valeur de l'expression */
-float Expr::eval(map<string, Expr> &symbols) {
+double Expr::eval(map<string, Expr> &symbols) {
     vector<ExprToken> operand_stack;
     bool first = true;
     bool assignment = false;
@@ -178,26 +185,25 @@ float Expr::eval(map<string, Expr> &symbols) {
             // TODO Manage FUNCTIONS
             // On récupère les deux dernières opérandes
             vector<ExprToken> args;
-            float argc;
+            double argc;
             if (token.type() == ExprToken::function_t) {
                 // Get the function
                 Func func = Func(token.str());
                 if(func.hasArgCount()) {
                     argc = func.argCount();
                 } else {
-                    argc = operand_stack.back().value();
-                    operand_stack.pop_back();
+                    argc = operand_stack.size();
                 }
-                for (int i=0; i<argc; ++i) {
+                for (int i=0; i<(unsigned long)argc; ++i) {
                     func.addArg(ExprToken(operand_stack.back()));
                     operand_stack.pop_back();
                 }
                 operand_stack.push_back(ExprToken(func.eval(symbols)));
             } else {
 
-                float operand_right = operand_stack.back().value();
+                double operand_right = operand_stack.back().value();
                 operand_stack.pop_back();
-                float operand_left = operand_stack.back().value();
+                double operand_left = operand_stack.back().value();
                 operand_stack.pop_back();
 
                 // On push le résultat des deux opérandes récupérées, calculé via l'opérateur en entrée

@@ -43,7 +43,7 @@ vector<ExprToken> StringOperations::split_expr_medium(string &s) {
     vector<ExprToken> output;
     while (not parser.eof()) {
 
-        float value;
+        double value;
         char sign;
         string nominal;
 
@@ -78,12 +78,13 @@ vector<ExprToken> StringOperations::split_expr_medium(string &s) {
 
 vector<ExprToken> StringOperations::split_expr_complex(string &s) {
 
-    regex floating("([[:digit:]]+)?(\\.[[:digit:]]+)?");
+    regex doubleing("([[:digit:]]+)?(\\.[[:digit:]]+)?");
     regex var("([_[:alpha:]]|[[:lower:]])[[:alpha:]]*");
     regex fun("([_[:alpha:]]|[[:lower:]])[[:alpha:]]*\\(.*\\)");
     regex oper("(\\+|-|\\*|/)");
     regex parenthesis("(\\(|\\))");
     regex comma(",");
+    regex equals("=");
 
 
     vector<ExprToken> tokens;
@@ -111,23 +112,25 @@ vector<ExprToken> StringOperations::split_expr_complex(string &s) {
         cursor = (int) input.length();
 
         // Vars to check if any is recognized (First value is true to go in the while loop)
-        bool recognized_float = false;
+        bool recognized_double = false;
         bool recognized_var = false;
         bool recognized_fun = false;
         bool recognized_oper = false;
         bool recognized_par = false;
         bool recognized_comma = false;
+        bool recognized_equals = false;
 
         string current;
         // While nothing is recognized
         while (cursor != 0
-               && !recognized_float && !recognized_fun && !recognized_oper && !recognized_var && !recognized_par &&
+               && !recognized_double && !recognized_fun && !recognized_oper && !recognized_var && !recognized_par &&
                !recognized_comma) {
 
             // Subset becomes bigger
             current = input.substr(0, (unsigned long) cursor);
 
-            recognized_float = regex_match(current, floating);
+            recognized_double = regex_match(current, doubleing);
+            recognized_equals = regex_match(current, equals);
             recognized_fun = regex_match(current, fun);
             recognized_oper = regex_match(current, oper);
             recognized_var = regex_match(current, var);
@@ -140,8 +143,11 @@ vector<ExprToken> StringOperations::split_expr_complex(string &s) {
         if (cursor == -1) throw InvalidExpression();
         // Add last recognized token
 
-        if (recognized_float) {
-            //cout << "FLOAT:" << current << endl;
+        if (recognized_double) {
+            //cout << "DOUBLE:" << current << endl;
+            tokens.push_back(ExprToken(current));
+        } else if (recognized_equals) {
+            //cout << "EQUALS:" << current << endl;
             tokens.push_back(ExprToken(current));
         } else if (recognized_var) {
             //cout << "VAR:" << current << endl;

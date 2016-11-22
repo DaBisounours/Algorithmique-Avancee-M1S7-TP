@@ -45,14 +45,14 @@ public:
     ExprToken(const string str) throw(NotAToken);
 
     /* Constructeur depuis un flottant (forcément littéral) */
-    ExprToken(float _value);
+    ExprToken(double _value);
 
     /* Accesseur de la priorité */
-    float priority() const;
+    double priority() const;
     /* Accesseur de la valeur */
-    float value() const;
+    double value() const;
     /* Accesseur du type */
-    float type() const;
+    double type() const;
 
     /* Setter du type */
     void forceType(TokenType t);
@@ -64,7 +64,7 @@ protected:
     /* Chaîne en entrée sauvegardée */
     string _s;
     /* Ordre de priorité ou valeur */
-    float _value;
+    double _value;
     /* Type de token */
     TokenType _type;
 

@@ -10,23 +10,23 @@
 
 class Func : public Expr {
 public:
-    Func(const string name, float argc = -1);
+    Func(const string name, double argc = -1);
     /* eval : Retourne la valeur de l'a fonction */
-    virtual float eval(map<string, Expr>& symbols);
+    virtual double eval(map<string, Expr>& symbols);
     /* */
     void addArg(const ExprToken& arg);
 
     bool hasArgCount();
 
-    const float argCount();
+    const double argCount();
 
 private:
     bool is_assignment(vector<ExprToken> vector);
     vector<ExprToken> _args;
     string _name;
-    float _argc;
+    double _argc;
 
-    float lerp(float value, float value1, float value2);
+    double lerp(double value, double value1, double value2);
 };
 
 

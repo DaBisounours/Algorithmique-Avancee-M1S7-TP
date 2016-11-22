@@ -22,7 +22,7 @@ public:
     void print();
 
     /* Execution du programme */
-    vector<float> exec();
+    vector<double> exec();
 
     /* Redéfinition de l'opérateur d'entrée >> */
     friend istream &operator>>( istream  &input, Program &D );

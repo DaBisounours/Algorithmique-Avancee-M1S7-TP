@@ -5,7 +5,7 @@
 #include "ExprToken.h"
 
 /* Constructeur depuis un flottant (forcément littéral) */
-ExprToken::ExprToken(float value) : _value(value), _type(operand_t) {
+ExprToken::ExprToken(double value) : _value(value), _type(operand_t) {
     stringstream ss;
     ss << value;
     _s = string(ss.str());
@@ -36,10 +36,10 @@ ExprToken::ExprToken(string str) throw(NotAToken) {
 }
 
 /* Accesseur de la priorité */
-float ExprToken::priority() const { if(_type == operator_t) return _value; else throw BadRequest(); }
+double ExprToken::priority() const { if(_type == operator_t) return _value; else throw BadRequest(); }
 
 /* Accesseur de la priorité */
-float ExprToken::value() const { return _value; }
+double ExprToken::value() const { return _value; }
 
 
 /* Accesseur de la chaîne */
@@ -59,7 +59,7 @@ bool ExprToken::is_litteral(const string s){
         }
     }
     // Update local
-    _type = operand_t; _value = std::stof(_s);
+    _type = operand_t; _value = std::atof(_s.c_str());
     return true;
 }
 
@@ -113,7 +113,7 @@ bool ExprToken::is_parenthesis(string s) {
     return false;
 }
 
-float ExprToken::type() const {
+double ExprToken::type() const {
     return _type;
 }
 

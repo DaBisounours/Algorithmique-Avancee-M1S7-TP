@@ -16,12 +16,12 @@ void Program::print() {
 
 }
 
-vector<float> Program::exec() {
-    vector<float> results;
+vector<double> Program::exec() {
+    vector<double> results;
 
     for(string expr_str : _expressions_str) {
         Expr expr {expr_str.c_str()};
-        float result = expr.eval(_symbols);
+        double result = expr.eval(_symbols);
         results.push_back(result);
     }
     return results;
@@ -53,7 +53,7 @@ istream &operator>>( istream  &input, Program &P ) {
             // Fin de programme
             else {
                 P._expressions_str.push_back(ss.str().substr(0, ss.str().length()-1));
-                vector<float> results = P.exec();
+                vector<double> results = P.exec();
                 if(not results.empty())
                     cout << results.back();
                 //P._expressions_str.clear();
