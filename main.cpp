@@ -9,7 +9,6 @@ using namespace std;
 
 void test(string title, const string& testLine, double expected, Program p){
     string separator = "\n==================================================================\n";
-    bool ok = false;
 
     // Début des tests
     double result = (Expr(testLine.c_str())).eval(p.context());

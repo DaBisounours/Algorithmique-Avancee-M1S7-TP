@@ -10,7 +10,7 @@
 #include <vector>
 #include <regex>
 #include <map>
-#include "ExprToken.h"
+#include "OLD_ExprToken.h"
 
 using namespace std;
 
@@ -27,7 +27,7 @@ class Expr {
 
 public:
     /* convertToRPN : Convertit une chaîne de la notation infixe vers RPN */
-    vector<ExprToken> convertToRPN(const vector<ExprToken> infix_expr);
+    vector<OLD_ExprToken> convertToRPN(const vector<OLD_ExprToken> infix_expr);
 
     /* Constructeur de base */
     Expr() {}
@@ -47,9 +47,9 @@ public:
 
 private:
     /* Vecteur des éléments de l'expression */
-    vector<ExprToken> _exprTokens;
+    vector<OLD_ExprToken> _exprTokens;
 
-    bool is_assignment(vector<ExprToken> vector);
+    bool is_assignment(vector<OLD_ExprToken> vector);
 };
 
 

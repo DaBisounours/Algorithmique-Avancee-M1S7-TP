@@ -4,7 +4,7 @@
 
 #include "Func.h"
 
-bool Func::is_assignment(vector<ExprToken> vector) {
+bool Func::is_assignment(vector<OLD_ExprToken> vector) {
     return false;
 }
 
@@ -47,8 +47,8 @@ double Func::eval(map<string, Expr> &symbols) {
 }
 
 
-void Func::addArg(const ExprToken &arg) {
-    _args.push_back(ExprToken(arg));
+void Func::addArg(const OLD_ExprToken &arg) {
+    _args.push_back(OLD_ExprToken(arg));
 }
 
 Func::Func(const string name, double argc) {

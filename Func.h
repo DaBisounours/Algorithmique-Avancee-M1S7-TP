@@ -14,15 +14,15 @@ public:
     /* eval : Retourne la valeur de l'a fonction */
     virtual double eval(map<string, Expr>& symbols);
     /* */
-    void addArg(const ExprToken& arg);
+    void addArg(const OLD_ExprToken& arg);
 
     bool hasArgCount();
 
     const double argCount();
 
 private:
-    bool is_assignment(vector<ExprToken> vector);
-    vector<ExprToken> _args;
+    bool is_assignment(vector<OLD_ExprToken> vector);
+    vector<OLD_ExprToken> _args;
     string _name;
     double _argc;
 

@@ -15,34 +15,34 @@ void pop_front(std::vector<T> &vec) {
 }
 
 /* convertToRPN : Convertit une chaîne de la notation infixe vers RPN */
-vector<ExprToken> Expr::convertToRPN(const vector<ExprToken> infix_expr) {
+vector<OLD_ExprToken> Expr::convertToRPN(const vector<OLD_ExprToken> infix_expr) {
 
     // Vector to be returned containing the converted expression
-    vector<ExprToken> output_expr;
-    vector<ExprToken> operator_stack;
+    vector<OLD_ExprToken> output_expr;
+    vector<OLD_ExprToken> operator_stack;
 
     // Pour chacun des tokens
-    for (const ExprToken &token : infix_expr) {
+    for (const OLD_ExprToken &token : infix_expr) {
         // On regarde si c'est un littéral
         // On regarde si c'est un symbole
         // On regarde si c'est un signe =
-        if (token.type() == ExprToken::operand_t
-            || token.type() == ExprToken::symbol_t
-            || token.type() == ExprToken::assign_t) {
+        if (token.type() == OLD_ExprToken::operand_t
+            || token.type() == OLD_ExprToken::symbol_t
+            || token.type() == OLD_ExprToken::assign_t) {
             // Si c'est le cas on le pousse à la sortie
-            output_expr.push_back(ExprToken(token));
+            output_expr.push_back(OLD_ExprToken(token));
         // Si c'est une parenthèse
-        } else if (token.type() == ExprToken::parenthesis_t) {
+        } else if (token.type() == OLD_ExprToken::parenthesis_t) {
             if (!token.value()) {// left parenthesis
                 operator_stack.push_back(token);
             } else {
                 // Tant que la pile n'est pas vide et que
                 while (not operator_stack.empty()
                        // Le token est une parenthèse ouverte ou une fonction
-                       && ((operator_stack.back().type() != ExprToken::parenthesis_t && operator_stack.back().value())
-                           || operator_stack.back().type() == ExprToken::function_t)) {
+                       && ((operator_stack.back().type() != OLD_ExprToken::parenthesis_t && operator_stack.back().value())
+                           || operator_stack.back().type() == OLD_ExprToken::function_t)) {
                     // On dépile tant que l'operateur en tête de pile n'est pas une parenthese droite
-                    ExprToken operator_back = operator_stack.back();
+                    OLD_ExprToken operator_back = operator_stack.back();
                     operator_stack.pop_back();
                     output_expr.push_back(operator_back);
 
@@ -52,9 +52,9 @@ vector<ExprToken> Expr::convertToRPN(const vector<ExprToken> infix_expr) {
                     // On dépile la parenthèse
                     operator_stack.pop_back();
                     // Si l'opérateur suivant est une fonction
-                    if (operator_stack.back().type() == ExprToken::function_t) {
+                    if (operator_stack.back().type() == OLD_ExprToken::function_t) {
                         // On la déplace dans la sortie
-                        ExprToken operator_back = operator_stack.back();
+                        OLD_ExprToken operator_back = operator_stack.back();
                         operator_stack.pop_back();
                         output_expr.push_back(operator_back);
                     }
@@ -63,39 +63,39 @@ vector<ExprToken> Expr::convertToRPN(const vector<ExprToken> infix_expr) {
                 }
             }
         // Si c'est une virgule
-        } else if (token.type() == ExprToken::argseparator_t) {
+        } else if (token.type() == OLD_ExprToken::argseparator_t) {
             // Tant que le token en tete de liste n'est pas une parenthèse gauche
             while (!operator_stack.empty()
-                && operator_stack.back().type() != ExprToken::parenthesis_t
+                && operator_stack.back().type() != OLD_ExprToken::parenthesis_t
                 && !operator_stack.back().value()) {
                 // Déplacer les opérateurs de la pile dans la sortie
                 // On la déplace dans la sortie
-                ExprToken operator_back = operator_stack.back();
+                OLD_ExprToken operator_back = operator_stack.back();
                 operator_stack.pop_back();
                 output_expr.push_back(operator_back);
             }
             // Si on ne trouve pas de parenthèse, Il y a une erreur de parenthèse ou de placement de séparateur
             if(operator_stack.empty()) throw MismatchedParenthesis();
         // Si c'est un opérateur
-        } else if(token.type() == ExprToken::function_t) {
+        } else if(token.type() == OLD_ExprToken::function_t) {
             operator_stack.push_back(token);
         } else {
-            ExprToken operator_back;
+            OLD_ExprToken operator_back;
             // Si la pile d'opérateurs n'est pas vide
             if (not operator_stack.empty())
             {
                 operator_back = operator_stack.back();
-                bool same_type_operators = operator_back.type() == ExprToken::operator_t
-                && token.type() == ExprToken::operator_t;
+                bool same_type_operators = operator_back.type() == OLD_ExprToken::operator_t
+                && token.type() == OLD_ExprToken::operator_t;
                 while (same_type_operators && not operator_stack.empty() && (token < operator_back || token == operator_back)) {
                     // On dépile tant que l'operateur en tête de pile est
                     // inférieur à celui en entrée
                     operator_stack.pop_back();
-                    output_expr.push_back(ExprToken(operator_back));
+                    output_expr.push_back(OLD_ExprToken(operator_back));
                     if(not operator_stack.empty())
                         operator_back = operator_stack.back();
-                    same_type_operators = operator_back.type() == ExprToken::operator_t
-                                          && token.type() == ExprToken::operator_t;
+                    same_type_operators = operator_back.type() == OLD_ExprToken::operator_t
+                                          && token.type() == OLD_ExprToken::operator_t;
                 }
 
             }
@@ -105,14 +105,14 @@ vector<ExprToken> Expr::convertToRPN(const vector<ExprToken> infix_expr) {
 
         }
         /*cout << '\n';
-        for (ExprToken &e:output_expr)cout << e.str() << " ";
+        for (OLD_ExprToken &e:output_expr)cout << e.str() << " ";
         cout << '\n';*/
 
     }
 
     // On vide la pile dans la sortie
     while (not operator_stack.empty()) {
-        if (operator_stack.back().type() == ExprToken::parenthesis_t)
+        if (operator_stack.back().type() == OLD_ExprToken::parenthesis_t)
             throw MismatchedParenthesis();
         output_expr.push_back(operator_stack.back());
         operator_stack.pop_back();
@@ -135,19 +135,19 @@ Expr::Expr(const char *str) throw(InvalidExpression) {
 
 /* eval : Retourne la valeur de l'expression */
 double Expr::eval(map<string, Expr> &symbols) {
-    vector<ExprToken> operand_stack;
+    vector<OLD_ExprToken> operand_stack;
     bool first = true;
     bool assignment = false;
     string assignment_name;
 
     // pour tous les éléments de la représentation interne
-    for (const ExprToken &token : _exprTokens) {
+    for (const OLD_ExprToken &token : _exprTokens) {
         // Si c'est un littéral
-        if (token.type() == ExprToken::operand_t)
+        if (token.type() == OLD_ExprToken::operand_t)
             // On le push dans la pile des opérandes
-            operand_stack.push_back(ExprToken(token));
+            operand_stack.push_back(OLD_ExprToken(token));
             // Si c'est un symbole
-        else if (token.type() == ExprToken::symbol_t) {
+        else if (token.type() == OLD_ExprToken::symbol_t) {
             // Si c'est le premier élément alors c'est une assignation
             if (first && is_assignment(_exprTokens)) {
                 assignment = true;
@@ -157,7 +157,7 @@ double Expr::eval(map<string, Expr> &symbols) {
             else {
                 try {
                     // évaluer la variable
-                    ExprToken eval_tmp{symbols.at(token.str()).eval(symbols)};
+                    OLD_ExprToken eval_tmp{symbols.at(token.str()).eval(symbols)};
                     // push le résultat dans la stack opérandes
                     operand_stack.push_back(eval_tmp);
                 } catch (out_of_range) {
@@ -167,12 +167,12 @@ double Expr::eval(map<string, Expr> &symbols) {
             }
         }
             // Si c'est un signe égal
-        else if (token.type() == ExprToken::assign_t) {
+        else if (token.type() == OLD_ExprToken::assign_t) {
             // Si on vient de passer par un symbole
             // (Système de jeton)
             if (assignment) {
                 // On ignore le signe égal et on enregistre l'évaluation qui suit
-                vector<ExprToken> exprToAssign = vector<ExprToken>(_exprTokens.begin() + 2, _exprTokens.end());
+                vector<OLD_ExprToken> exprToAssign = vector<OLD_ExprToken>(_exprTokens.begin() + 2, _exprTokens.end());
 
                 symbols[assignment_name] = {StringOperations::joinExprToString(exprToAssign).c_str()};
                 //cout << "\n" << assignment_name << " referenced. *";
@@ -184,9 +184,9 @@ double Expr::eval(map<string, Expr> &symbols) {
         } else {
             // TODO Manage FUNCTIONS
             // On récupère les deux dernières opérandes
-            vector<ExprToken> args;
+            vector<OLD_ExprToken> args;
             double argc;
-            if (token.type() == ExprToken::function_t) {
+            if (token.type() == OLD_ExprToken::function_t) {
                 // Get the function
                 Func func = Func(token.str());
                 if(func.hasArgCount()) {
@@ -195,10 +195,10 @@ double Expr::eval(map<string, Expr> &symbols) {
                     argc = operand_stack.size();
                 }
                 for (int i=0; i<(unsigned long)argc; ++i) {
-                    func.addArg(ExprToken(operand_stack.back()));
+                    func.addArg(OLD_ExprToken(operand_stack.back()));
                     operand_stack.pop_back();
                 }
-                operand_stack.push_back(ExprToken(func.eval(symbols)));
+                operand_stack.push_back(OLD_ExprToken(func.eval(symbols)));
             } else {
 
                 double operand_right = operand_stack.back().value();
@@ -209,16 +209,16 @@ double Expr::eval(map<string, Expr> &symbols) {
                 // On push le résultat des deux opérandes récupérées, calculé via l'opérateur en entrée
                 switch (token.str()[0]) {
                     case '+' :
-                        operand_stack.push_back(ExprToken{operand_left + operand_right});
+                        operand_stack.push_back(OLD_ExprToken{operand_left + operand_right});
                         break;
                     case '-' :
-                        operand_stack.push_back(ExprToken{operand_left - operand_right});
+                        operand_stack.push_back(OLD_ExprToken{operand_left - operand_right});
                         break;
                     case '*' :
-                        operand_stack.push_back(ExprToken{operand_left * operand_right});
+                        operand_stack.push_back(OLD_ExprToken{operand_left * operand_right});
                         break;
                     case '/' :
-                        operand_stack.push_back(ExprToken{operand_left / operand_right});
+                        operand_stack.push_back(OLD_ExprToken{operand_left / operand_right});
                         break;
                     default:
                         throw NotAToken();
@@ -234,19 +234,19 @@ double Expr::eval(map<string, Expr> &symbols) {
 /* Affiche la représentation interne */
 void Expr::print() {
     //cout << "Représentation interne:\n";
-    for (ExprToken &element : _exprTokens) {
+    for (OLD_ExprToken &element : _exprTokens) {
         cout << element.str() << " ";
     }
     cout << "\n";
 }
 
 Expr::Expr(const Expr &expr) {
-    _exprTokens = vector<ExprToken>(expr._exprTokens);
+    _exprTokens = vector<OLD_ExprToken>(expr._exprTokens);
 }
 
-bool Expr::is_assignment(vector<ExprToken> tokens) {
-    for (ExprToken &token : tokens)
-        if (token.type() == ExprToken::assign_t) return true;
+bool Expr::is_assignment(vector<OLD_ExprToken> tokens) {
+    for (OLD_ExprToken &token : tokens)
+        if (token.type() == OLD_ExprToken::assign_t) return true;
     return false;
 }
 
