@@ -12,8 +12,13 @@
 using namespace std;
 
 class OperatorToken : ExprToken<Operator> {
-    virtual Operator value();
+public:
 
+    OperatorToken(Operator oper){ _operator=oper; }
+    virtual Operator value() { return _operator; }
+
+private:
+    Operator _operator;
 };
 
 

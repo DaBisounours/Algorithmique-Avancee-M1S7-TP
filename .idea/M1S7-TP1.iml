@@ -12,10 +12,18 @@
       <sourceFolder url="file://$MODULE_DIR$/Expr.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Func.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ExprTokens/Operators/Divide.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ExprTokens/Operators/Operator.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ExprTokens/Operators/Add.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ExprTokens/Operators/Add.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ExprTokens/Operators/Multiply.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ExprTokens/Operators/Subtract.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ExprTokens/Operators/Divide.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ExprTokens/Operators/Subtract.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ExprTokens/Operators/Multiply.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/ExprTokens/Operators/Operator.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/ExprTokens/OperatorToken.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/ExprTokens/OperatorToken.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/ExprTokens/Operators/Operator.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Func.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/ExprToken.h" isTestSource="false" />
