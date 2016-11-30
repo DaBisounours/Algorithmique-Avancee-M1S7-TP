@@ -7,17 +7,20 @@
 
 #include <string>
 #include <typeinfo>
+#include "ExprTokens/TokenValue.h"
 
 using namespace std;
 
-template <typename T = double>
 class ExprToken {
 public:
-    virtual T value() = 0;
-    string type() { return typeid(this).name(); }
-private:
-    T _value;
+    // Accesseur du type
+    virtual string type() { return typeid(this).name(); }
+    // Accesseur de la chaine de caractères
+    string str() const { return _s; }
 
+protected:
+    string _s;
+    TokenValue _value;
 };
 
 

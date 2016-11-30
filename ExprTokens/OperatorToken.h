@@ -1,24 +1,21 @@
 //
-// Created by evangraine on 28/11/16.
+// Created by evangraine on 30/11/16.
 //
 
 #ifndef M1S7_TP1_OPERATORTOKEN_H
 #define M1S7_TP1_OPERATORTOKEN_H
 
-#include <string>
-#include "../ExprToken.h"
+
 #include "Operators/Operator.h"
+#include "Specials/Special.h"
+#include "../ExprToken.h"
 
-using namespace std;
-
-class OperatorToken : ExprToken<Operator> {
+class OperatorToken : ExprToken {
 public:
 
-    OperatorToken(Operator oper){ _operator=oper; }
-    virtual Operator value() { return _operator; }
+    OperatorToken(Operator oper){ this->_value = oper; }
+    virtual TokenValue value() { return this->_value; }
 
-private:
-    Operator _operator;
 };
 
 

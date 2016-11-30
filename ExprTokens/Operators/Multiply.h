@@ -9,7 +9,7 @@
 #include "Operator.h"
 
 class Multiply : Operator{
-
+    virtual unsigned int priority() { return 2; };
 };
 
 

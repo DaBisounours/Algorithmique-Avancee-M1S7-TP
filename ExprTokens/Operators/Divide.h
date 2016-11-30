@@ -9,7 +9,7 @@
 #include "Operator.h"
 
 class Divide : Operator {
-
+    virtual unsigned int priority(){ return 2; }
 };
 
 

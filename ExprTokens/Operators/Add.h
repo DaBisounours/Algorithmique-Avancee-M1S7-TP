@@ -9,7 +9,7 @@
 #include "Operator.h"
 
 class Add : Operator{
-
+    virtual unsigned int priority() { return 1; }
 };
 
 

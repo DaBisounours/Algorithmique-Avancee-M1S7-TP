@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Expr.h"
 #include "Program.h"
-#include "StringOperations.h"
+
 
 using namespace std;
 
@@ -45,7 +45,7 @@ int main() {
         //cout << "Résultat : \n";
         cout<< res << "\n";
 */
-    Program p;
+    /*Program p;
 
     system("clear");
 
@@ -77,6 +77,9 @@ int main() {
     cout << endl << "<> Mode interactif (Faites-vous plaisir) <>" << endl;
 
     cin >> p;
+*/
 
+    cout << "" << endl;
+    //OperatorToken addSign(Add());
     return 0;
 }

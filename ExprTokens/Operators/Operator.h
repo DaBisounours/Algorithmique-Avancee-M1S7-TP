@@ -6,8 +6,10 @@
 #define M1S7_TP1_OPERATOR_H
 
 
-class Operator {
+#include "../TokenValue.h"
 
+class Operator : public TokenValue{
+    virtual unsigned int priority() { return 0; }
 };
 
 

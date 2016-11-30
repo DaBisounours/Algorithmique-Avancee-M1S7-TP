@@ -9,7 +9,7 @@
 #include "Operator.h"
 
 class Subtract : Operator {
-
+    virtual unsigned int priority() { return 1; }
 };
 
 
